@@ -7,19 +7,21 @@ import HeroImage from './components/HeroImage/HeroImage.svelte';
 
 const PUBLIC_ROOT = 'https://www.abc.net.au/res/sites/news-projects';
 
+function setupEl(targetEl) {
+  targetEl.classList.add('interactive-hero-images');
+  delete targetEl.dataset.mount;
+}
+
 whenOdysseyLoaded.then(() => {
   selectMounts('heroimage').forEach(targetEl => {
-    const { root = [], width, height } = acto(targetEl.id);
-
-    targetEl.classList.add('interactive-hero-images');
-
+    const { width, height } = acto(targetEl.id);
+    setupEl(targetEl);
     let imgSrc: string | null = null;
     const nextSibling = targetEl.nextSibling as HTMLDivElement;
     if (nextSibling) {
       imgSrc = nextSibling.querySelector('img')?.src || null;
       nextSibling.parentElement?.removeChild(nextSibling);
     }
-
     mount(HeroImage, {
       target: targetEl,
       props: {
@@ -34,8 +36,7 @@ whenOdysseyLoaded.then(() => {
     const { root = [], vid, width, height } = acto(targetEl.id);
     const sanitisedRoot = Array.isArray(root) ? root : [String(root)];
     const rootPath = `${PUBLIC_ROOT}/${sanitisedRoot.join('-')}/`;
-    targetEl.classList.add('interactive-hero-images');
-
+    setupEl(targetEl);
     const vidRoot = `${rootPath}${vid}`;
     mount(HeroTransparentVideo, {
       target: targetEl,
