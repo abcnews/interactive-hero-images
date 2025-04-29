@@ -5,17 +5,18 @@ import { mount } from 'svelte';
 import HeroTransparentVideo from './components/HeroTransparentVideo/HeroTransparentVideo.svelte';
 import HeroImage from './components/HeroImage/HeroImage.svelte';
 
+const PUBLIC_ROOT = 'https://www.abc.net.au/res/sites/news-projects';
+
 whenOdysseyLoaded.then(() => {
   selectMounts('heroimage').forEach(targetEl => {
     const { root = [], width, height } = acto(targetEl.id);
 
-    const rootPath = `https://www.abc.net.au/res/sites/news-projects/${root.join('-')}/`;
     targetEl.classList.add('interactive-hero-images');
 
     let imgSrc: string | null = null;
     const nextSibling = targetEl.nextSibling as HTMLDivElement;
     if (nextSibling) {
-      imgSrc = nextSibling.querySelector('img').src;
+      imgSrc = nextSibling.querySelector('img')?.src || null;
       nextSibling.parentElement?.removeChild(nextSibling);
     }
 
@@ -31,8 +32,8 @@ whenOdysseyLoaded.then(() => {
 
   selectMounts('herovidtransparent').forEach(targetEl => {
     const { root = [], vid, width, height } = acto(targetEl.id);
-
-    const rootPath = `https://www.abc.net.au/res/sites/news-projects/${root.join('-')}/`;
+    const sanitisedRoot = Array.isArray(root) ? root : [String(root)];
+    const rootPath = `${PUBLIC_ROOT}/${sanitisedRoot.join('-')}/`;
     targetEl.classList.add('interactive-hero-images');
 
     const vidRoot = `${rootPath}${vid}`;
