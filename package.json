@@ -1,30 +1,30 @@
 {
-  "name": "interactive-hero-images",
-  "version": "1.0.0-pre",
-  "description": "A project generated from aunty's svelte project template.",
-  "license": "MIT",
-  "private": true,
-  "contributors": [
-    "Ash Kyd <kyd.ashley@abc.net.au>"
-  ],
-  "aunty": {
-    "type": "svelte"
-  },
-  "scripts": {
-    "start": "aunty serve",
-    "dev": "aunty serve",
-    "test": "aunty test"
-  },
-  "devDependencies": {
-    "@abcnews/aunty": "^16.0.0",
-    "@testing-library/svelte": "^5.2.7",
-    "@types/jest": "^29.5.14",
-    "@types/webpack-env": "^1.18.8"
-  },
-  "dependencies": {
-    "@abcnews/alternating-case-to-object": "^3.1.1",
-    "@abcnews/env-utils": "^4.0.0",
-    "@abcnews/mount-utils": "^3.0.0",
-    "svelte": "^5.28.2"
-  }
+	"name": "interactive-hero-images",
+	"version": "1.0.0",
+	"description": "A project generated from aunty's svelte project template.",
+	"license": "MIT",
+	"private": true,
+	"contributors": [
+		"Ash Kyd <kyd.ashley@abc.net.au>"
+	],
+	"aunty": {
+		"type": "svelte"
+	},
+	"scripts": {
+		"start": "aunty serve",
+		"dev": "aunty serve",
+		"test": "aunty test"
+	},
+	"devDependencies": {
+		"@abcnews/aunty": "^16.0.0",
+		"@testing-library/svelte": "^5.2.7",
+		"@types/jest": "^29.5.14",
+		"@types/webpack-env": "^1.18.8"
+	},
+	"dependencies": {
+		"@abcnews/alternating-case-to-object": "^3.1.1",
+		"@abcnews/env-utils": "^4.0.0",
+		"@abcnews/mount-utils": "^3.0.0",
+		"svelte": "^5.28.2"
+	}
 }
