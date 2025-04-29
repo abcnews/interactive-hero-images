@@ -1,6 +1,10 @@
 <script lang="ts">
+  import SharedStyles from '../SharedStyles/SharedStyles.svelte';
+
   let { vid, vidSafari, width, height } = $props();
 </script>
+
+<SharedStyles />
 
 <video class="vid" muted autoplay loop playsinline style:max-width={width} {width} {height}>
   <source src={vidSafari} type="video/mp4;codecs=hvc1" />
@@ -13,16 +17,5 @@
     height: auto;
     margin: 0 auto;
     max-width: 400px;
-  }
-
-  :global(.interactive-hero-images) {
-    width: 99vw;
-    height: inherit;
-    margin: 0;
-    margin-left: calc(50% - 50vw) !important;
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 0;
-    margin-top: var(--od-space-component-margin, 80px);
   }
 </style>
