@@ -1,6 +1,6 @@
 import acto from '@abcnews/alternating-case-to-object';
 import { whenOdysseyLoaded } from '@abcnews/env-utils';
-import { getMountValue, selectMounts } from '@abcnews/mount-utils';
+import { selectMounts } from '@abcnews/mount-utils';
 import { mount } from 'svelte';
 import HeroTransparentVideo from './components/HeroTransparentVideo/HeroTransparentVideo.svelte';
 import HeroImage from './components/HeroImage/HeroImage.svelte';
@@ -43,6 +43,21 @@ whenOdysseyLoaded.then(() => {
       props: {
         vid: `${vidRoot}.webm`,
         vidSafari: `${vidRoot}.mp4`,
+        width,
+        height
+      }
+    });
+  });
+
+  selectMounts('herourl').forEach(targetEl => {
+    const { root = [], svg, width, height } = acto(targetEl.id);
+    const sanitisedRoot = Array.isArray(root) ? root : [String(root)];
+    const rootPath = `${PUBLIC_ROOT}/${sanitisedRoot.join('-')}/`;
+    setupEl(targetEl);
+    mount(HeroImage, {
+      target: targetEl,
+      props: {
+        img: `${rootPath}${svg}.svg`,
         width,
         height
       }
