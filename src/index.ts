@@ -49,7 +49,7 @@ whenOdysseyLoaded.then(() => {
     });
   });
 
-  selectMounts('herourl').forEach(targetEl => {
+  selectMounts('herosvg').forEach(targetEl => {
     const { root = [], svg, width, height } = acto(targetEl.id);
     const sanitisedRoot = Array.isArray(root) ? root : [String(root)];
     const rootPath = `${PUBLIC_ROOT}/${sanitisedRoot.join('-')}/`;
