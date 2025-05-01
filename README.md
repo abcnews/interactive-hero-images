@@ -20,7 +20,7 @@ You must include the height and width of the image. This specifies the max size 
 
 ## Transparent hero video
 
-Transparent video is harder because you must upload it to the FTP server manually.
+Transparent video must be uploaded to the FTP server manually.
 
 There must be two videos:
 
@@ -40,3 +40,21 @@ To get this working:
 Specify your folder as an array, in this case `ROOTyourROOTfolder` resolves to `your-folder`.
 
 You must include the height and width of the video. This specifies the max size of the video, and ensures it scales down in the right ratio for mobile.
+
+## Animated/SVG hero
+
+Transparent video must be uploaded to the FTP server manually.
+
+To get this working:
+
+1. Rename your svg to be all lowercase & alphanumeric. e.g. myanimation.svg
+2. Upload your svg to `http://abc.net.au/res/sites/news-projects/[your-folder]`
+3. Include the following hash:
+
+```
+#herosvgROOTyourROOTfolderSVGmysvgWIDTH21remHEIGHT21rem
+```
+
+Specify your folder as an array, in this case `ROOTyourROOTfolder` resolves to `your-folder`.
+
+You must include the height and width of the svg. This specifies the max size of the video, and ensures it scales down in the right ratio for mobile.
