@@ -4,7 +4,7 @@ Add hero images to your articles.
 
 ## Attach JS to CoreMedia articles
 
-Attach the JavaScript document to your CoreMedia artile. 
+Attach the JavaScript document to your CoreMedia artile under **Miscellaneous** > **Associated JavaScripts**
 
 CoreMedia ID: 105229972
 
