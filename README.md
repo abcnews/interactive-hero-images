@@ -2,6 +2,16 @@
 
 Add hero images to your articles.
 
+## Attach JS to CoreMedia articles
+
+Attach the JavaScript document to your CoreMedia artile. 
+
+CoreMedia ID: 105229972
+
+This will load the script into the page.
+
+https://www.abc.net.au/res/sites/news-projects/interactive-hero-images/1.0.4/index.js
+
 ## Hero image
 
 To embed a hero image:
