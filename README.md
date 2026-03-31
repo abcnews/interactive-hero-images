@@ -4,7 +4,7 @@ Add hero images to your articles.
 
 ## Attach JS to CoreMedia articles
 
-Attach the JavaScript document to your CoreMedia artile under **Miscellaneous** > **Associated JavaScripts**
+Attach the JavaScript document to your CoreMedia article under **Miscellaneous** > **Associated JavaScripts**
 
 CoreMedia ID: 105229972
 
@@ -16,12 +16,18 @@ To embed a hero image:
 
 1. Upload your hero image to CoreMedia
 2. Check the "use original image" box
-3. Add it to the Related Media section of your article (important!)
+3. Add it to the Related Media section of your article
 4. Include the hash with the width/height/CMID
 
 ```
 #heroimageWIDTH210pxHEIGHT210pxCMID12345
 [embed illustration]
+
+#headernomedia
+
+Your header text goes here
+
+#endheader
 ```
 
 You must include the height and width of the image. This specifies the max size of the image, and ensures it scales down in the right ratio for mobile.
