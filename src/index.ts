@@ -1,5 +1,5 @@
 import acto from '@abcnews/alternating-case-to-object';
-import { whenOdysseyLoaded } from '@abcnews/env-utils';
+import { getTier, TIERS, whenOdysseyLoaded } from '@abcnews/env-utils';
 import { selectMounts } from '@abcnews/mount-utils';
 import { mount } from 'svelte';
 import HeroTransparentVideo from './components/HeroTransparentVideo/HeroTransparentVideo.svelte';
@@ -12,24 +12,54 @@ function setupEl(targetEl) {
   delete targetEl.dataset.mount;
 }
 
-whenOdysseyLoaded.then(() => {
-  selectMounts('heroimage').forEach(targetEl => {
-    const { width, height } = acto(targetEl.id);
+whenOdysseyLoaded.then(async () => {
+  selectMounts('heroimage').map(async targetEl => {
+    const { width, height, cmid = 0 } = acto(targetEl.id);
     setupEl(targetEl);
     let imgSrc: string | null = null;
-    const nextSibling = targetEl.nextSibling as HTMLDivElement;
-    if (nextSibling) {
-      imgSrc = nextSibling.querySelector('img')?.src || null;
-      nextSibling.parentElement?.removeChild(nextSibling);
-    }
-    mount(HeroImage, {
-      target: targetEl,
-      props: {
-        img: imgSrc,
-        width,
-        height
+    let imgAlt: string = '';
+
+    if (cmid) {
+      // Use Odyssey API to get image src from related media
+      const odyssey = (window as any).__ODYSSEY__;
+      const meta = odyssey.meta.getMeta();
+      const doc = meta.mediaById[String(cmid)];
+
+      if (doc?.media?.image) {
+        imgSrc = doc.media.image.primary?.complete?.[0]?.url;
+        imgAlt = doc.alt || '';
+      } else {
+        const errorMessage = `Image ${cmid} must be added to the Related section of your article.`;
+        console.error(`[interactive-hero-images] ${errorMessage}`);
+        if (getTier() !== TIERS.LIVE) {
+          Object.assign(targetEl.style, {
+            border: '2px solid red',
+            color: 'red'
+          });
+          targetEl.innerText = errorMessage;
+        }
       }
-    });
+    } else {
+      const nextSibling = targetEl.nextSibling as HTMLDivElement;
+      if (nextSibling) {
+        const imgEl = nextSibling.querySelector('img');
+        imgSrc = imgEl?.src || null;
+        imgAlt = imgEl?.alt || '';
+        nextSibling.parentElement?.removeChild(nextSibling);
+      }
+    }
+
+    if (imgSrc) {
+      mount(HeroImage, {
+        target: targetEl,
+        props: {
+          img: imgSrc,
+          alt: imgAlt,
+          width,
+          height
+        }
+      });
+    }
   });
 
   selectMounts('herovidtransparent').forEach(targetEl => {

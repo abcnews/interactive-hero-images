@@ -4,29 +4,49 @@ Add hero images to your articles.
 
 ## Attach JS to CoreMedia articles
 
-Attach the JavaScript document to your CoreMedia artile under **Miscellaneous** > **Associated JavaScripts**
+Attach the JavaScript document to your CoreMedia article under **Miscellaneous** > **Associated JavaScripts**
 
 CoreMedia ID: 105229972
 
 This will load the script into the page.
 
-https://www.abc.net.au/res/sites/news-projects/interactive-hero-images/1.0.4/index.js
-
-## Hero image
+## Hero image (header)
 
 To embed a hero image:
 
 1. Upload your hero image to CoreMedia
 2. Check the "use original image" box
-3. Embed Full the image at the top of your article
-4. Prefix it with the #heroimage hash, as shown below:
+3. Add it to the Related Media section of your article
+4. Include the hash with the width/height/CMID
 
 ```
-#heroimageWIDTH21remHEIGHT21rem
+#heroimageWIDTH210pxHEIGHT210pxCMID12345
 [embed illustration]
+
+#headernomedia
+
+Your header text goes here
+
+#endheader
 ```
 
 You must include the height and width of the image. This specifies the max size of the image, and ensures it scales down in the right ratio for mobile.
+
+You must add the image to the related media section otherwise it will not load.
+
+### Hero image (elsewhere in the article)
+
+Use regular "use original image" CM images, but embed them in the article so they syndicate:
+
+1. Upload your hero image to CoreMedia
+2. Check the "use original image" box
+3. Embed Full the image where you want the image to appear
+4. Prefix it with the #heroimage hash, as shown below:
+
+```
+#heroimageWIDTH210pxHEIGHT210px
+[embed illustration]
+```
 
 ## Transparent hero video
 
@@ -44,7 +64,7 @@ To get this working:
 3. Include the following hash:
 
 ```
-#herovidtransparentROOTyourROOTfolderVIDmyvideoWIDTH21remHEIGHT21rem
+#herovidtransparentROOTyourROOTfolderVIDmyvideoWIDTH210pxHEIGHT210px
 ```
 
 Specify your folder as an array, in this case `ROOTyourROOTfolder` resolves to `your-folder`.
@@ -62,7 +82,7 @@ To get this working:
 3. Include the following hash:
 
 ```
-#herosvgROOTyourROOTfolderSVGmysvgWIDTH21remHEIGHT21rem
+#herosvgROOTyourROOTfolderSVGmysvgWIDTH210pxHEIGHT210px
 ```
 
 Specify your folder as an array, in this case `ROOTyourROOTfolder` resolves to `your-folder`.

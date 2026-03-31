@@ -24,7 +24,7 @@
 	"dependencies": {
 		"@abcnews/alternating-case-to-object": "^3.1.1",
 		"@abcnews/env-utils": "^4.0.0",
-		"@abcnews/mount-utils": "^3.0.0",
+		"@abcnews/mount-utils": "^3.0.1",
 		"svelte": "^5.28.2"
 	}
 }
