@@ -12,9 +12,20 @@ function setupEl(targetEl) {
   delete targetEl.dataset.mount;
 }
 
+/**
+ * We can only encode alphanumeric values in ACTO, so we must map some back
+ * to proper CSS units.
+ */
+function sanitiseValue(val: any): string | undefined {
+  if (typeof val === 'string') {
+    return val.replace(/pct/g, '%');
+  }
+  return val;
+}
+
 whenOdysseyLoaded.then(async () => {
   selectMounts('heroimage').map(async targetEl => {
-    const { width, height, cmid = 0 } = acto(targetEl.id);
+    const { width, height, maxwidth, cmid = 0 } = acto(targetEl.id);
     setupEl(targetEl);
     let imgSrc: string | null = null;
     let imgAlt: string = '';
@@ -55,15 +66,16 @@ whenOdysseyLoaded.then(async () => {
         props: {
           img: imgSrc,
           alt: imgAlt,
-          width,
-          height
+          width: sanitiseValue(width),
+          height: sanitiseValue(height),
+          maxwidth: sanitiseValue(maxwidth)
         }
       });
     }
   });
 
   selectMounts('herovidtransparent').forEach(targetEl => {
-    const { root = [], vid, width, height } = acto(targetEl.id);
+    const { root = [], vid, width, height, maxwidth } = acto(targetEl.id);
     const sanitisedRoot = Array.isArray(root) ? root : [String(root)];
     const rootPath = `${PUBLIC_ROOT}/${sanitisedRoot.join('-')}/`;
     setupEl(targetEl);
@@ -73,14 +85,15 @@ whenOdysseyLoaded.then(async () => {
       props: {
         vid: `${vidRoot}.webm`,
         vidSafari: `${vidRoot}.mp4`,
-        width,
-        height
+        width: sanitiseValue(width),
+        height: sanitiseValue(height),
+        maxwidth: sanitiseValue(maxwidth)
       }
     });
   });
 
   selectMounts('herosvg').forEach(targetEl => {
-    const { root = [], svg, width, height } = acto(targetEl.id);
+    const { root = [], svg, width, height, maxwidth } = acto(targetEl.id);
     const sanitisedRoot = Array.isArray(root) ? root : [String(root)];
     const rootPath = `${PUBLIC_ROOT}/${sanitisedRoot.join('-')}/`;
     setupEl(targetEl);
@@ -88,8 +101,9 @@ whenOdysseyLoaded.then(async () => {
       target: targetEl,
       props: {
         img: `${rootPath}${svg}.svg`,
-        width,
-        height
+        width: sanitiseValue(width),
+        height: sanitiseValue(height),
+        maxwidth: sanitiseValue(maxwidth)
       }
     });
   });
