@@ -16,7 +16,7 @@
 		"test": "aunty test"
 	},
 	"devDependencies": {
-		"@abcnews/aunty": "^16.0.0",
+		"@abcnews/aunty": "^16.0.1",
 		"@testing-library/svelte": "^5.2.7",
 		"@types/jest": "^29.5.14",
 		"@types/webpack-env": "^1.18.8"
