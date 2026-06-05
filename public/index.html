@@ -10,9 +10,68 @@
     <!-- If you add `addModernJS:true` to your build config, replace the <script> above with the ones below -->
     <!-- <script type="module" src="index_modern.js"></script> -->
     <!-- <script nomodule src="index.js"></script> -->
+    <style>
+      body,
+      html {
+        padding: 0;
+        margin: 0;
+      }
+      body > *:not(.u-full) {
+        margin: 0 auto;
+        max-width: calc(100% - 32px);
+        border: 1px fuchsia dashed;
+        border-style: none dotted;
+      }
+
+      h1,
+      h2 {
+        padding-top: 5rem;
+      }
+    </style>
   </head>
   <body>
-    <div data-mount id="interactiveheroimagesX42YtextZtrue"></div>
+    <h1>SVGs</h1>
+    <h2>CSS Keyshape</h2>
+    <div data-mount id="herosvgROOT2026ebolaSVGheroWIDTH450pxRATIO279x214"></div>
+    <h2>u-full hits the edge of screen on mobile</h2>
+    <div data-mount id="herosvgROOTstorylabROOTgamblingSVGheaderWIDTH700pxRATIO175x150FULLWIDTHtrue"></div>
+    <h1>Transparent Videos</h1>
+    <h2>mouse</h2>
+    <div data-mount id="herovidtransparentROOTinteractiveROOTmousemarkVIDmouseheader2WIDTH390pxRATIO392x162"></div>
+    <h2>maxwidth 50vw</h2>
+    <div
+      data-mount
+      id="herovidtransparentROOTinteractiveROOTmousemarkVIDmouseheader2WIDTH390pxRATIO392x162MAXWIDTH50vw"
+    ></div>
+
+    <h1>Image sibling</h1>
+    <div data-mount id="heroimageWIDTH800pxRATIO399x281"></div>
+    <figure
+      class="Figure_figure__NnqTc ContentAlignment_marginBottom__4H_6E ContentAlignment_overflowAuto__c1_IL ContentAlignment_outdentDesktop__ijbiK"
+      role="group"
+      data-print="inline-media"
+      data-component="Figure"
+      data-uri="coremedia://image/105229784"
+      style="position: relative"
+    >
+      <div class="ContentImage_ratio__0yYeG">
+        <div
+          class="AspectRatio_container__FC_XH"
+          style="--aspect-ratio: 1.4171042760690173"
+          data-component="AspectRatioContainer"
+        >
+          <img
+            alt="A photo illustration showing Anthony Albanese"
+            class="Image_image__5tFYM ContentImage_image__DQ_cq"
+            sizes="100vw"
+            src="https://preview-production.wcms.abc-cdn.net.au/535c608d440ae5f19c15aefebb245a72?src"
+            loading="eager"
+            data-component="Image"
+          />
+        </div>
+      </div>
+    </figure>
+
     <!-- Mock Odyssey's loaded event so the `whenOdysseyLoaded` promise resolves -->
     <script>
       window.dispatchEvent(new CustomEvent('odyssey:api'));
