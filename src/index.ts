@@ -5,8 +5,6 @@ import { mount } from 'svelte';
 import HeroRoot from './components/HeroRoot/HeroRoot.svelte';
 import type { ActoConfig } from './types';
 
-console.log('helo');
-
 const PUBLIC_ROOT = 'https://www.abc.net.au/res/sites/news-projects';
 
 function parseActoProps(id: string): ActoConfig {

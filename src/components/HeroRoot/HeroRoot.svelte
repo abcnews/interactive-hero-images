@@ -2,8 +2,9 @@
   import { onMount } from 'svelte';
   import HeroImage from '../HeroImage/HeroImage.svelte';
   import HeroTransparentVideo from '../HeroTransparentVideo/HeroTransparentVideo.svelte';
+  import type { HeroRootConfig } from '../../types';
 
-  let { componentType = 'img', maxwidth, width, fullwidth, ratio, ...rest } = $props();
+  let { componentType = 'img', maxwidth, width, fullwidth, ratio, ...rest }: HeroRootConfig = $props();
   let rootEl = $state<HTMLDivElement>();
   let Component = componentType === 'img' ? HeroImage : HeroTransparentVideo;
 

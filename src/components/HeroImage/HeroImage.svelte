@@ -1,5 +1,7 @@
 <script lang="ts">
-  let { img, alt = '' } = $props();
+  import type { HeroRootConfig } from '../../types';
+
+  let { img, alt = '' }: HeroRootConfig = $props();
 </script>
 
 <img class="interactige-hero-image__img" src={img} {alt} />

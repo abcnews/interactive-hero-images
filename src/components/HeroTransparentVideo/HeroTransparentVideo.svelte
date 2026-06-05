@@ -1,5 +1,7 @@
 <script lang="ts">
-  let { vid, vidSafari } = $props();
+  import type { HeroRootConfig } from '../../types';
+
+  let { vid, vidSafari }: HeroRootConfig = $props();
 </script>
 
 <div class="interactive-hero-image__vid">
