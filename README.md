@@ -6,7 +6,7 @@ Add hero images, transparent videos, and SVG animations to your articles.
 
 Attach the JavaScript document to your CoreMedia article under **Miscellaneous** > **Associated JavaScripts**
 
-CoreMedia ID: 105229972
+CoreMedia ID: 106765378
 
 This will load the script into the page.
 
@@ -93,4 +93,3 @@ To get this working:
 ```
 
 Specify your folder as an array, in this case `ROOTyourROOTfolder` resolves to `your-folder`.
-
