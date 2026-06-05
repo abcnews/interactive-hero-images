@@ -2,20 +2,27 @@ import acto from '@abcnews/alternating-case-to-object';
 import { getTier, TIERS, whenOdysseyLoaded } from '@abcnews/env-utils';
 import { selectMounts } from '@abcnews/mount-utils';
 import { mount } from 'svelte';
-import HeroTransparentVideo from './components/HeroTransparentVideo/HeroTransparentVideo.svelte';
-import HeroImage from './components/HeroImage/HeroImage.svelte';
+import HeroRoot from './components/HeroRoot/HeroRoot.svelte';
+import type { ActoConfig } from './types';
 
 const PUBLIC_ROOT = 'https://www.abc.net.au/res/sites/news-projects';
 
-function setupEl(targetEl) {
-  targetEl.classList.add('interactive-hero-images');
-  delete targetEl.dataset.mount;
+function parseActoProps(id: string): ActoConfig {
+  const parsed = acto(id) as any as ActoConfig;
+  return {
+    fullwidth: false,
+    ...parsed
+  };
+}
+
+function getRootPath(root: string | string[]): string {
+  const sanitisedRoot = Array.isArray(root) ? root : [String(root)];
+  return `${PUBLIC_ROOT}/${sanitisedRoot.join('-')}/`;
 }
 
 whenOdysseyLoaded.then(async () => {
   selectMounts('heroimage').map(async targetEl => {
-    const { width, height, cmid = 0 } = acto(targetEl.id);
-    setupEl(targetEl);
+    const { cmid = 0, ...rest } = parseActoProps(targetEl.id);
     let imgSrc: string | null = null;
     let imgAlt: string = '';
 
@@ -40,9 +47,15 @@ whenOdysseyLoaded.then(async () => {
         }
       }
     } else {
-      const nextSibling = targetEl.nextSibling as HTMLDivElement;
+      // Use the adjacent sibling to get the image src
+      const nextSibling = targetEl.nextElementSibling as HTMLDivElement;
       if (nextSibling) {
         const imgEl = nextSibling.querySelector('img');
+        if (!imgEl) {
+          const errorMessage = `Adjacent image must be added to the page after this marker.`;
+          console.error(`[interactive-hero-images] ${errorMessage}`);
+          return;
+        }
         imgSrc = imgEl?.src || null;
         imgAlt = imgEl?.alt || '';
         nextSibling.parentElement?.removeChild(nextSibling);
@@ -50,46 +63,42 @@ whenOdysseyLoaded.then(async () => {
     }
 
     if (imgSrc) {
-      mount(HeroImage, {
+      mount(HeroRoot, {
         target: targetEl,
         props: {
+          componentType: 'img',
           img: imgSrc,
           alt: imgAlt,
-          width,
-          height
+          ...rest
         }
       });
     }
   });
 
   selectMounts('herovidtransparent').forEach(targetEl => {
-    const { root = [], vid, width, height } = acto(targetEl.id);
-    const sanitisedRoot = Array.isArray(root) ? root : [String(root)];
-    const rootPath = `${PUBLIC_ROOT}/${sanitisedRoot.join('-')}/`;
-    setupEl(targetEl);
+    const { root, vid, ...rest } = parseActoProps(targetEl.id);
+    const rootPath = getRootPath(root);
     const vidRoot = `${rootPath}${vid}`;
-    mount(HeroTransparentVideo, {
+    mount(HeroRoot, {
       target: targetEl,
       props: {
+        componentType: 'video',
         vid: `${vidRoot}.webm`,
         vidSafari: `${vidRoot}.mp4`,
-        width,
-        height
+        ...rest
       }
     });
   });
 
   selectMounts('herosvg').forEach(targetEl => {
-    const { root = [], svg, width, height } = acto(targetEl.id);
-    const sanitisedRoot = Array.isArray(root) ? root : [String(root)];
-    const rootPath = `${PUBLIC_ROOT}/${sanitisedRoot.join('-')}/`;
-    setupEl(targetEl);
-    mount(HeroImage, {
+    const { root, svg, ...rest } = parseActoProps(targetEl.id);
+    const rootPath = getRootPath(root);
+    mount(HeroRoot, {
       target: targetEl,
       props: {
+        componentType: 'img',
         img: `${rootPath}${svg}.svg`,
-        width,
-        height
+        ...rest
       }
     });
   });

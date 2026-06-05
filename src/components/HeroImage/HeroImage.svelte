@@ -1,17 +1,15 @@
 <script lang="ts">
-  import SharedStyles from '../SharedStyles/SharedStyles.svelte';
+  import type { HeroRootConfig } from '../../types';
 
-  let { img, alt = '', width, height } = $props();
+  let { img, alt = '' }: HeroRootConfig = $props();
 </script>
 
-<SharedStyles />
-<img class="hero-image" src={img} {alt} {width} {height} style:max-width={width} />
+<img class="interactige-hero-image__img" src={img} {alt} />
 
 <style lang="scss">
-  .hero-image {
-    width: 75vw;
-    height: auto;
-    margin: 0 auto;
-    max-width: 400px;
+  .interactige-hero-image__img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
 </style>
