@@ -18,6 +18,7 @@ All interactive hero mounts support the following formatting parameters (written
 - `RATIO`: Specifies the aspect ratio in `[width]x[height]` format (e.g. `RATIO399x281` becomes `399/281` in CSS).
 - `MAXWIDTH`: Sets an optional maximum width limit (e.g. `MAXWIDTH50vw`). If not provided, it defaults to the `WIDTH` value, bounded by a maximum of `100%`.
 - `FULLWIDTH`: Set to `true` (e.g., `FULLWIDTHtrue`) to apply the `u-full` class to the mount point, causing the element to span the full width of the screen.
+- `BUTT`: Optionally butts the image up against top or bottom content. Accepted values are `before` (butts up against preceding content), `bottom` (butts up against following content), `both` (butts up against both), or `default` (standard margin/spacing). E.g., `BUTTbefore` or `BUTTboth`.
 
 ---
 

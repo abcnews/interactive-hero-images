@@ -4,7 +4,15 @@
   import HeroTransparentVideo from '../HeroTransparentVideo/HeroTransparentVideo.svelte';
   import type { HeroRootConfig } from '../../types';
 
-  let { componentType = 'img', maxwidth, width, fullwidth, ratio, ...rest }: HeroRootConfig = $props();
+  let {
+    componentType = 'img',
+    maxwidth,
+    width,
+    fullwidth,
+    ratio,
+    butt = 'default',
+    ...rest
+  }: HeroRootConfig = $props();
   let rootEl = $state<HTMLDivElement>();
   let Component = componentType === 'img' ? HeroImage : HeroTransparentVideo;
 
@@ -18,12 +26,15 @@
     if (fullwidth) {
       targetEl.classList.add('u-full');
     }
+    if (['before', 'both'].includes(butt)) {
+      targetEl.previousElementSibling?.classList.add('interactive-hero-image__butt-before');
+    }
     delete targetEl.dataset.mount;
   });
 </script>
 
 <div
-  class="interactive-hero-image"
+  class="interactive-hero-image interactive-hero-image--butt-{butt}"
   style:max-width="min(100%, {maxwidth || width})"
   style:width
   style:aspect-ratio={ratio?.replace('x', '/')}
@@ -36,14 +47,27 @@
   .interactive-hero-image {
     display: flex;
     flex-direction: column;
-    margin: var(--od-space-component-margin, 80px) auto 0;
+    margin: 0 auto 0;
+  }
+  .interactive-hero-image--butt-default {
+    margin-top: var(--od-space-component-margin, 80px);
   }
   :global(.interactive-hero-image__mount) {
     position: relative;
   }
 
   // Adjacent header should have no margin-top. This class is added by index.ts.
-  :global(.interactive-hero-image__mount + .Header) {
+  :global([data-component='Anchor']:has(.interactive-hero-image) + .Header) {
     margin-top: 0;
+  }
+
+  // Adjacent header should have no margin-top when butting up against our image
+  :global([data-component='Anchor']:has(.interactive-hero-image--butt-both, .interactive-hero-image--butt-bottom) + *) {
+    margin-top: 0;
+  }
+
+  // previous header should have no margin-bottom when our image butts up against it
+  :global(.interactive-hero-image__butt-before) {
+    margin-bottom: 0;
   }
 </style>

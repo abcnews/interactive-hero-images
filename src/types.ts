@@ -8,6 +8,7 @@ export interface HeroRootConfig {
   alt?: string;
   vid?: string;
   vidSafari?: string;
+  butt?: 'default' | 'before' | 'bottom' | 'both';
 }
 
 export interface ActoConfig {
