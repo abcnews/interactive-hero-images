@@ -9,21 +9,17 @@
     transitioneasingcustom
   }: HeroRootConfig = $props();
 
-  console.log({ transitioneasing, transitioneasingcustom });
-
   let current = $state(0);
   // The slide that is being faded out from under the current one (-1 when none)
   let previous = $state(-1);
 
-  // 'none' is a hard cut: no fade, no overlap between slides, just an instant swap
+  // 'none' is a hard cut
   let instant = $derived(transitioneasing === 'none');
   let duration = $derived(instant ? 0 : transitionduration);
   // 'custom' uses the (already decoded) CSS easing string
   let easing = $derived(transitioneasing === 'custom' ? transitioneasingcustom || 'ease-in-out' : transitioneasing);
 
   // Each slide is fully visible for `dwell`, then the next fades in on top of it over `duration`.
-  // The outgoing slide stays fully opaque underneath until the incoming one has finished fading in,
-  // so the background never shows through mid-transition.
   $effect(() => {
     if (images.length < 2) {
       return;
@@ -32,7 +28,7 @@
 
     const interval = setInterval(() => {
       if (instant) {
-        // Hard cut: swap straight to the next slide, no outgoing slide kept underneath
+        // Hard cut: swap straight to the next slide
         previous = -1;
         current = (current + 1) % images.length;
         return;

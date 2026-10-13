@@ -68,7 +68,6 @@ whenOdysseyLoaded.then(async () => {
     const errors: string[] = [];
 
     const cmidList = normaliseCmids(cmids);
-    console.log({ cmidList });
 
     if (cmidList.length) {
       // Multiple images (slideshow)
