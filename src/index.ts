@@ -3,7 +3,9 @@ import { getTier, TIERS, whenOdysseyLoaded } from '@abcnews/env-utils';
 import { selectMounts } from '@abcnews/mount-utils';
 import { mount } from 'svelte';
 import HeroRoot from './components/HeroRoot/HeroRoot.svelte';
+import { encode, decode } from '@abcnews/base-36-text';
 import type { ActoConfig } from './types';
+import type HeroImage from './components/HeroImage/HeroImage.svelte';
 
 const PUBLIC_ROOT = 'https://www.abc.net.au/res/sites/news-projects';
 
@@ -11,6 +13,11 @@ function parseActoProps(id: string): ActoConfig {
   const parsed = acto(id) as any as ActoConfig;
   return {
     fullwidth: false,
+    transitioneasing: 'ease-in-out',
+    transitiondwell: 1200,
+    transitionduration: 600,
+    // From TT: ease-in-out cubic - base36 encoded
+    transitioneasingcustom: encode('cubic-bezier(0.66, 0, 0.34, 1)'),
     ...parsed
   };
 }
@@ -20,55 +27,89 @@ function getRootPath(root: string | string[]): string {
   return `${PUBLIC_ROOT}/${sanitisedRoot.join('-')}/`;
 }
 
+/**
+ * Looks up an image from the article's Related media via the Odyssey API.
+ * Returns the image, or an error message if it couldn't be found.
+ */
+function getImageFromCmid(cmid: string | number): { image?: HeroImage; error?: string } {
+  const odyssey = (window as any).__ODYSSEY__;
+  const meta = odyssey.meta.getMeta();
+  const doc = meta.mediaById[String(cmid)];
+  const src: string | undefined = doc?.media?.image?.primary?.complete?.[0]?.url;
+
+  if (!src) {
+    const error = `Image ${cmid} must be added to the Related section of your article.`;
+    console.error(`[interactive-hero-images] ${error}`);
+    return { error };
+  }
+
+  return { image: { src, alt: doc.alt || '' } };
+}
+
+/** Acto may give us a single value or an array; always return an array of strings. */
+function normaliseCmids(cmids: ActoConfig['cmids']): string[] {
+  if (cmids === undefined || cmids === null || cmids === '') return [];
+  return (Array.isArray(cmids) ? cmids : [cmids]).map(String);
+}
+
+/** Show errors on the mount point outside of the live tier. */
+function showErrors(targetEl: HTMLElement, errors: string[]) {
+  if (getTier() === TIERS.LIVE || !errors.length) return;
+  Object.assign(targetEl.style, {
+    border: '2px solid red',
+    color: 'red'
+  });
+  targetEl.innerText = errors.join('\n');
+}
+
 whenOdysseyLoaded.then(async () => {
   selectMounts('heroimage').map(async targetEl => {
-    const { cmid = 0, ...rest } = parseActoProps(targetEl.id);
-    let imgSrc: string | null = null;
-    let imgAlt: string = '';
+    const { cmid = 0, cmids, transitioneasingcustom, ...rest } = parseActoProps(targetEl.id);
+    const images: HeroImage[] = [];
+    const errors: string[] = [];
 
-    if (cmid) {
-      // Use Odyssey API to get image src from related media
-      const odyssey = (window as any).__ODYSSEY__;
-      const meta = odyssey.meta.getMeta();
-      const doc = meta.mediaById[String(cmid)];
+    const cmidList = normaliseCmids(cmids);
+    console.log({ cmidList });
 
-      if (doc?.media?.image) {
-        imgSrc = doc.media.image.primary?.complete?.[0]?.url;
-        imgAlt = doc.alt || '';
-      } else {
-        const errorMessage = `Image ${cmid} must be added to the Related section of your article.`;
-        console.error(`[interactive-hero-images] ${errorMessage}`);
-        if (getTier() !== TIERS.LIVE) {
-          Object.assign(targetEl.style, {
-            border: '2px solid red',
-            color: 'red'
-          });
-          targetEl.innerText = errorMessage;
-        }
-      }
+    if (cmidList.length) {
+      // Multiple images (slideshow)
+      cmidList.forEach(id => {
+        const { image, error } = getImageFromCmid(id);
+        if (image) images.push(image);
+        if (error) errors.push(error);
+      });
+    } else if (cmid) {
+      // Single image from related media
+      const { image, error } = getImageFromCmid(cmid);
+      if (image) images.push(image);
+      if (error) errors.push(error);
     } else {
       // Use the adjacent sibling to get the image src
       const nextSibling = targetEl.nextElementSibling as HTMLDivElement;
       if (nextSibling) {
         const imgEl = nextSibling.querySelector('img');
         if (!imgEl) {
-          const errorMessage = `Adjacent image must be added to the page after this marker.`;
-          console.error(`[interactive-hero-images] ${errorMessage}`);
+          console.error(`[interactive-hero-images] Adjacent image must be added to the page after this marker.`);
           return;
         }
-        imgSrc = imgEl?.src || null;
-        imgAlt = imgEl?.alt || '';
+        if (imgEl.src) images.push({ src: imgEl.src, alt: imgEl.alt || '' });
         nextSibling.parentElement?.removeChild(nextSibling);
       }
     }
 
-    if (imgSrc) {
+    showErrors(targetEl, errors);
+
+    if (images.length) {
       mount(HeroRoot, {
         target: targetEl,
         props: {
           componentType: 'img',
-          img: imgSrc,
-          alt: imgAlt,
+          // First image kept as img/alt for the existing single-image behaviour
+          img: images[0].src,
+          alt: images[0].alt,
+          images,
+          // Decoded from base-36 so it can be used directly as a CSS easing value
+          transitioneasingcustom: transitioneasingcustom ? decode(transitioneasingcustom) : undefined,
           ...rest
         }
       });

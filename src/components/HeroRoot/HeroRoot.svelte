@@ -3,6 +3,7 @@
   import HeroImage from '../HeroImage/HeroImage.svelte';
   import HeroTransparentVideo from '../HeroTransparentVideo/HeroTransparentVideo.svelte';
   import type { HeroRootConfig } from '../../types';
+  import HeroSlideshow from '../HeroSlideshow/HeroSlideshow.svelte';
 
   let {
     componentType = 'img',
@@ -11,10 +12,14 @@
     fullwidth,
     ratio,
     butt = 'default',
+    images,
     ...rest
   }: HeroRootConfig = $props();
   let rootEl = $state<HTMLDivElement>();
-  let Component = componentType === 'img' ? HeroImage : HeroTransparentVideo;
+  let Component = $derived.by(() => {
+    if (componentType !== 'img') return HeroTransparentVideo;
+    return Number(images?.length) > 1 ? HeroSlideshow : HeroImage;
+  });
 
   // Add u-full and header margin override class to the mount point
   onMount(() => {
@@ -40,7 +45,7 @@
   style:aspect-ratio={ratio?.replace('x', '/')}
   bind:this={rootEl}
 >
-  <Component {...rest} />
+  <Component {...rest} {images} />
 </div>
 
 <style lang="scss">
