@@ -12,7 +12,7 @@ function parseActoProps(id: string): ActoConfig {
   const parsed = acto(id) as any as ActoConfig;
   return {
     fullwidth: false,
-    transitioneasing: 'ease-in-out',
+    transitioneasing: 'custom',
     transitiondwell: 1200,
     transitionduration: 600,
     // From TT: ease-in-out cubic - base36 encoded

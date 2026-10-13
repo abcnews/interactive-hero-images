@@ -5,23 +5,21 @@
     images = [],
     transitionduration = 600,
     transitiondwell = 1200,
-    transitioneasing = 'ease-in-out',
+    transitioneasing,
     transitioneasingcustom
   }: HeroRootConfig = $props();
+
+  console.log({ transitioneasing, transitioneasingcustom });
 
   let current = $state(0);
   // The slide that is being faded out from under the current one (-1 when none)
   let previous = $state(-1);
 
-  // 'none' is a hard cut; 'custom' uses the (already decoded) CSS easing string
-  let duration = $derived(transitioneasing === 'none' ? 0 : transitionduration);
-  let easing = $derived(
-    transitioneasing === 'custom'
-      ? transitioneasingcustom || 'ease-in-out'
-      : transitioneasing === 'none'
-        ? 'linear'
-        : transitioneasing
-  );
+  // 'none' is a hard cut: no fade, no overlap between slides, just an instant swap
+  let instant = $derived(transitioneasing === 'none');
+  let duration = $derived(instant ? 0 : transitionduration);
+  // 'custom' uses the (already decoded) CSS easing string
+  let easing = $derived(transitioneasing === 'custom' ? transitioneasingcustom || 'ease-in-out' : transitioneasing);
 
   // Each slide is fully visible for `dwell`, then the next fades in on top of it over `duration`.
   // The outgoing slide stays fully opaque underneath until the incoming one has finished fading in,
@@ -33,6 +31,13 @@
     let clearTimer: ReturnType<typeof setTimeout>;
 
     const interval = setInterval(() => {
+      if (instant) {
+        // Hard cut: swap straight to the next slide, no outgoing slide kept underneath
+        previous = -1;
+        current = (current + 1) % images.length;
+        return;
+      }
+
       previous = current;
       current = (current + 1) % images.length;
 
@@ -49,7 +54,7 @@
   });
 </script>
 
-<div class="interactive-hero-slideshow" style:--slide-duration="{duration}ms" style:--slide-easing={easing}>
+<div class="interactive-hero-slideshow" style:--slide-transition={instant ? 'none' : `opacity ${duration}ms ${easing}`}>
   {#each images as image, i}
     <img
       class="interactive-hero-slideshow__img"
@@ -89,7 +94,7 @@
     &--active {
       opacity: 1;
       z-index: 2;
-      transition: opacity var(--slide-duration) var(--slide-easing);
+      transition: var(--slide-transition, none);
     }
 
     @media (prefers-reduced-motion: reduce) {
