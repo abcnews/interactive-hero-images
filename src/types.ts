@@ -17,7 +17,7 @@ export interface CSSTransition {
   transitioneasingcustom?: string;
 }
 
-export interface HeroImage {
+export interface HeroImageInstance {
   src: string;
   alt: string;
 }
@@ -46,6 +46,6 @@ export interface HeroRootConfig extends CSSTransition {
   vid?: string;
   vidSafari?: string;
   butt?: 'default' | 'before' | 'bottom' | 'both';
-  images?: HeroImage[];
+  images?: HeroImageInstance[];
   // transitioneasingcustom is already decoded to a plain CSS easing string here
 }

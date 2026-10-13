@@ -4,8 +4,7 @@ import { selectMounts } from '@abcnews/mount-utils';
 import { mount } from 'svelte';
 import HeroRoot from './components/HeroRoot/HeroRoot.svelte';
 import { encode, decode } from '@abcnews/base-36-text';
-import type { ActoConfig } from './types';
-import type HeroImage from './components/HeroImage/HeroImage.svelte';
+import type { ActoConfig, HeroImageInstance } from './types';
 
 const PUBLIC_ROOT = 'https://www.abc.net.au/res/sites/news-projects';
 
@@ -31,7 +30,7 @@ function getRootPath(root: string | string[]): string {
  * Looks up an image from the article's Related media via the Odyssey API.
  * Returns the image, or an error message if it couldn't be found.
  */
-function getImageFromCmid(cmid: string | number): { image?: HeroImage; error?: string } {
+function getImageFromCmid(cmid: string | number): { image?: HeroImageInstance; error?: string } {
   const odyssey = (window as any).__ODYSSEY__;
   const meta = odyssey.meta.getMeta();
   const doc = meta.mediaById[String(cmid)];
@@ -65,7 +64,7 @@ function showErrors(targetEl: HTMLElement, errors: string[]) {
 whenOdysseyLoaded.then(async () => {
   selectMounts('heroimage').map(async targetEl => {
     const { cmid = 0, cmids, transitioneasingcustom, ...rest } = parseActoProps(targetEl.id);
-    const images: HeroImage[] = [];
+    const images: HeroImageInstance[] = [];
     const errors: string[] = [];
 
     const cmidList = normaliseCmids(cmids);
@@ -107,7 +106,7 @@ whenOdysseyLoaded.then(async () => {
           // First image kept as img/alt for the existing single-image behaviour
           img: images[0].src,
           alt: images[0].alt,
-          images,
+          images: images as HeroImageInstance[],
           // Decoded from base-36 so it can be used directly as a CSS easing value
           transitioneasingcustom: transitioneasingcustom ? decode(transitioneasingcustom) : undefined,
           ...rest
