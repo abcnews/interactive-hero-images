@@ -1,6 +1,6 @@
 {
 	"name": "interactive-hero-images",
-	"version": "2.0.0",
+	"version": "2.1.1-next.0",
 	"description": "A project generated from aunty's svelte project template.",
 	"license": "MIT",
 	"private": true,
@@ -23,6 +23,7 @@
 	},
 	"dependencies": {
 		"@abcnews/alternating-case-to-object": "^3.1.1",
+		"@abcnews/base-36-text": "^1.0.1",
 		"@abcnews/env-utils": "^4.0.0",
 		"@abcnews/mount-utils": "^3.0.1",
 		"svelte": "^5.28.2"

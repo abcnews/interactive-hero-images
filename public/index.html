@@ -10,6 +10,29 @@
     <!-- If you add `addModernJS:true` to your build config, replace the <script> above with the ones below -->
     <!-- <script type="module" src="index_modern.js"></script> -->
     <!-- <script nomodule src="index.js"></script> -->
+    <script type="text/javascript">
+      const cmids = ['107260330', '107260336'];
+
+      const urls = ['example1.jpg', 'example2.webp'];
+
+      window.__ODYSSEY__ = {
+        meta: {
+          getMeta: () => ({
+            mediaById: Object.fromEntries(
+              cmids.map((cmid, i) => [
+                cmid,
+                { alt: '', media: { image: { primary: { complete: [{ url: urls[i] }] } } } }
+              ])
+            )
+          })
+        }
+      };
+
+      window.addEventListener('load', () => {
+        console.log('odyssey loaded', window.odyssey);
+        window.dispatchEvent(new CustomEvent('odyssey:api'));
+      });
+    </script>
     <style>
       body,
       html {
@@ -72,9 +95,10 @@
       </div>
     </figure>
 
-    <!-- Mock Odyssey's loaded event so the `whenOdysseyLoaded` promise resolves -->
-    <script>
-      window.dispatchEvent(new CustomEvent('odyssey:api'));
-    </script>
+    <h1>Slideshow</h1>
+    <div
+      data-mount
+      id="heroimageRATIO1x1WIDTH250pxTRANSITIONDURATION1600TRANSITIONDWELL1200CMIDS107260330CMIDS107260336"
+    ></div>
   </body>
 </html>
