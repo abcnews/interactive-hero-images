@@ -32,6 +32,8 @@ export interface ActoConfig extends CSSTransition {
   width?: string;
   ratio?: string;
   cmids?: string | string[];
+  /** `header` mounts the component inside the page's first <h1>, replacing its contents */
+  replace?: 'header';
   // transitioneasingcustom is a base-36 encoded CSS easing string here (see @abcnews/base-36-text)
 }
 
