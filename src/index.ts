@@ -61,9 +61,27 @@ function showErrors(targetEl: HTMLElement, errors: string[]) {
   targetEl.innerText = errors.join('\n');
 }
 
+/**
+ * Moves the mount point into the page's first <h1>, replacing its contents (REPLACEheader).
+ * The original headline text is kept as an aria-label and the mount is hidden from assistive tech,
+ * so the label is the only thing read for the heading.
+ */
+function replaceHeader(targetEl: HTMLElement, replace: ActoConfig['replace']) {
+  if (replace !== 'header') return;
+  const headerEl = document.querySelector('h1');
+  if (!headerEl) {
+    console.error(`[interactive-hero-images] REPLACEheader requires an <h1> on the page.`);
+    return;
+  }
+  const headlineText = headerEl.textContent?.trim();
+  headerEl.setAttribute('aria-label', headlineText);
+  targetEl.setAttribute('aria-hidden', 'true');
+  headerEl.replaceChildren(targetEl);
+}
+
 whenOdysseyLoaded.then(async () => {
   selectMounts('heroimage').map(async targetEl => {
-    const { cmid = 0, cmids, transitioneasingcustom, ...rest } = parseActoProps(targetEl.id);
+    const { cmid = 0, cmids, replace, transitioneasingcustom, ...rest } = parseActoProps(targetEl.id);
     const images: HeroImageInstance[] = [];
     const errors: string[] = [];
 
@@ -98,6 +116,7 @@ whenOdysseyLoaded.then(async () => {
     showErrors(targetEl, errors);
 
     if (images.length) {
+      replaceHeader(targetEl, replace);
       mount(HeroRoot, {
         target: targetEl,
         props: {
@@ -115,9 +134,10 @@ whenOdysseyLoaded.then(async () => {
   });
 
   selectMounts('herovidtransparent').forEach(targetEl => {
-    const { root, vid, ...rest } = parseActoProps(targetEl.id);
+    const { root, vid, replace, ...rest } = parseActoProps(targetEl.id);
     const rootPath = getRootPath(root);
     const vidRoot = `${rootPath}${vid}`;
+    replaceHeader(targetEl, replace);
     mount(HeroRoot, {
       target: targetEl,
       props: {
@@ -130,8 +150,9 @@ whenOdysseyLoaded.then(async () => {
   });
 
   selectMounts('herosvg').forEach(targetEl => {
-    const { root, svg, ...rest } = parseActoProps(targetEl.id);
+    const { root, svg, replace, ...rest } = parseActoProps(targetEl.id);
     const rootPath = getRootPath(root);
+    replaceHeader(targetEl, replace);
     mount(HeroRoot, {
       target: targetEl,
       props: {
