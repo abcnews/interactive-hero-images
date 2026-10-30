@@ -73,7 +73,7 @@ function replaceHeader(targetEl: HTMLElement, replace: ActoConfig['replace']) {
     console.error(`[interactive-hero-images] REPLACEheader requires an <h1> on the page.`);
     return;
   }
-  const headlineText = headerEl.textContent?.trim();
+  const headlineText = String(headerEl.textContent)?.trim();
   headerEl.setAttribute('aria-label', headlineText);
   targetEl.setAttribute('aria-hidden', 'true');
   headerEl.replaceChildren(targetEl);
